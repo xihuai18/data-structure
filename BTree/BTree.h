@@ -1,3 +1,7 @@
+#ifndef __BTNODE__
+#define __BTNODE__
+
+
 #include "BTNode.h"
 
 template <typename T>
@@ -104,7 +108,7 @@ void BTree<T>::sloveUnderflow(BTNodePosi(T) v)
 {
 	if ((_order + 1) / 2 <= v->child.size()) return;
   BTNodePosi(T) p = v->parent;
-  if(!p) {
+  if(p == nullptr) {
   	if(!v->key.size() && v->child[0]){
   		_root = v->child[0];
   		_root->parent = nullptr;
@@ -134,7 +138,7 @@ void BTree<T>::sloveUnderflow(BTNodePosi(T) v)
   }
   if(p->child.size() - 1 > r) {
   	auto rs = p->child[r + 1];
-  	if((_order + 1) / 2 < ls.child.size()) {
+  	if((_order + 1) / 2 < rs.child.size()) {
   		v.key.insert(v.key.size(), p->key[r]);
   		p->key[r] = rs->key.remove(0);
   		v->child.insert(v->child.size(), rs->child.remove(0));
@@ -172,3 +176,6 @@ void BTree<T>::sloveUnderflow(BTNodePosi(T) v)
 	sloveUnderflow(p);
 	return ;
 }
+
+
+#endif

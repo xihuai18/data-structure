@@ -1,14 +1,20 @@
+#ifndef __SPLAY__
+#define __SPLAY__
+
 #include "../BST/BST.h"
 
 template <typename T> class Splay: public BST<T>
 {
 protected:
-	BinNodePosi(T) Splay(BinNodePosi(T) v);//将结点v伸展至根
+	using BST<T>::_root;
+	using BST<T>::_size;
+	using BST<T>::_hot;
+	BinNodePosi(T) splay(BinNodePosi(T) v);//将结点v伸展至根
 public:
 	BinNodePosi(T) & search(const T& e)override; 
 	BinNodePosi(T) insert(const T& e)override;
 	bool remove(const T& e)override;
-}
+};
 
 template <typename NodePosi> inline
 void attachAsLChild(NodePosi p, NodePosi lc)
@@ -87,15 +93,15 @@ BinNodePosi(T) & Splay<T>::search(const T& e)
 template <typename T>
 BinNodePosi(T) Splay<T>::insert(const T& e)//插入到根上
 {
-	if(!_root) { _size++; return _root = new BinNode(e); }
+	if(!_root) { _size++; return _root = new BinNode<T>(e); }
 	if(e = search(e)->data) return _root;
 	_size++;
 	auto t = _root;
 	if(_root->data < e){
-		t->parent = _root = new BinNode(e, nullptr, t, t->rChild);
+		t->parent = _root = new BinNode<T>(e, nullptr, t, t->rChild);
 		if(HasRChild(*t)) { t->rChild->parent = _root; t->rChild = nullptr; }
 	} else {
-		t->parent = _root = new BinNode(e, nullptr, t, t->lChild);
+		t->parent = _root = new BinNode<T>(e, nullptr, t, t->lChild);
 		if(HasLChild(*t)) { t->lChild->parent = _root; t->lChild = nullptr; }
 	}
 	updateHeightAbove(t);
@@ -127,3 +133,5 @@ bool Splay<T>::remove(const T& e)
 	if(_root) updateHeight(_root);
 	return true;
 }
+
+#endif

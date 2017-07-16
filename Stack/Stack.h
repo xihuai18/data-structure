@@ -1,8 +1,13 @@
+#ifndef __STACK__
+#define __STACK__
+
 #include "../Vector/Vector.h"
 
 template <typename T> class Stack: public Vector<T> { 
 public: 
-	void push(T const& e) { insert(size(), e); } 
-	T pop() { return remove(size() - 1); } 
-	T& top() { return (*this)[size() - 1]; } 
+	void push(T const& e) { Vector<T>::insert(Vector<T>::size(), e); } 
+	T pop() { return Vector<T>::remove(Vector<T>::size() - 1); } 
+	T& top() { return (*this)[Vector<T>::size() - 1]; } 
 };
+//注意：pop和top都返回最后一个值，但是pop返回左值，top返回右值
+#endif

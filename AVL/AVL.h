@@ -1,5 +1,6 @@
-#include "../BST/BST.h"
-#include "../BST/BST.h"
+#ifndef __AVL__
+#define __AVL__
+#include "..\BST\BST.h"
 //状态
 #define Balanced(x) (stature((x).lChild) == stature((x).rChild))
 #define BalFac(x) (stature((x).lChild) - stature((x).rChild))
@@ -8,17 +9,20 @@
 	stature((x)->lChild) > stature((x)->rChild) ? (x)->lChild : (\
 	stature((x)->rChild) > stature((x)->lChild) ? (x)->rChild :	(\
 	IsLChild(*(x)) ? (x)->lChild : (x)->rChild \
-	)\ 
+	)\
 	)\
 )
 
 template <typename T> class AVL: public BST<T>
 {
 public:
+	using BST<T>::_hot;
+	using BST<T>::_size;
+	using BST<T>::_root;
 	BinNodePosi(T) insert(const T& e) override;
 	bool remove(const T& e) override;
 	//继承search()和rotateAt()等接口
-}
+};
 
 template <typename T>
 BinNodePosi(T) AVL<T>::insert(const T& e)
@@ -39,7 +43,7 @@ BinNodePosi(T) AVL<T>::insert(const T& e)
 }
 
 template <typename T>
-BinNodePosi(T) AVL<T>::remove(const T& e)
+bool AVL<T>::remove(const T& e)
 {
 	BinNodePosi(T) & x = search(e);
 	if(!x) return false;
@@ -52,3 +56,4 @@ BinNodePosi(T) AVL<T>::remove(const T& e)
 		updateHeight(g);
 	}
 }
+#endif		

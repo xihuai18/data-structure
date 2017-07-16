@@ -1,3 +1,5 @@
+#ifndef __BINNODE__
+#define __BINNODE__
 #include "../Queue/Queue.h"
 #include "../Stack/Stack.h"
 
@@ -25,9 +27,9 @@ IsLChild(*((x)->parent)) ? \
 (x)->parent->parent->lChild \
 ) //叔叔
 #define FromParentTo(x) ( \
-IsRoot(x) ? _root : ( \
-IsLChild(x) ? (x).parent->lChild : (x).parent->rChild \
-) \
+	IsRoot(x) ? _root : ( \
+	IsLChild(x) ? (x).parent->lChild : (x).parent->rChild \
+	) \
 ) //来自父亲的指针
 
 typedef enum { RB_RED, RB_BLACK} RBColor;
@@ -39,11 +41,11 @@ template <typename T> struct BinNode {
 	BinNodePosi(T) rChild;
 	int height;
 	int npl; //Null Path Length, Used in Left_Style_tree;
-	RBcolor color;
+	RBColor color;
 	//constructors
 	BinNode():parent(nullptr), lChild(nullptr), rChild(nullptr), height(0), npl(1), color(RB_RED){}
-	BinNode(T e, BinNodePosi(T) p = nullptr, BinNodePosi(T) lc = nullptr, BinNodePosi(T) rc = nullptr, int h = 0, int l = 1, RBcolor c = RB_RED):
-	:date(e), parent(p), lChild(lc), rChild(rc), height(h), npl(l), color(c){} 
+	BinNode(T e, BinNodePosi(T) p = nullptr, BinNodePosi(T) lc = nullptr, BinNodePosi(T) rc = nullptr, int h = 0, int l = 1, RBColor c = RB_RED)
+	:data(e), parent(p), lChild(lc), rChild(rc), height(h), npl(l), color(c){} 
 	//operation
 	int size(); //size of sub_tree
 	BinNodePosi(T) insertAsLC(T const&);
@@ -72,13 +74,13 @@ int BinNode<T>::size(){
 }
 
 template <typename T>
-int BinNode<T>::insertAsLC(T const& e){
+BinNodePosi(T) BinNode<T>::insertAsLC(T const& e){
 
 	return lChild = new BinNode(e, this);
 }
 
 template <typename T>
-int BinNode<T>::insertAsLC(T const& e){
+BinNodePosi(T) BinNode<T>::insertAsRC(T const& e){
 	return rChild = new BinNode(e, this);
 }
 
@@ -113,9 +115,9 @@ template <typename T>
 	void BinNode<T>::travPre(VST& visit)
 	{
 		Stack<BinNodePosi(T)> S;
-		if(x) S.push(x);
+		if(this) S.push(this);
 		while(!S.empty()) {
-			x = S.top();
+			auto x = S.top();
 			visit(x);
 			if (HasRChild(*x)) S.push(x->rChild);
 			if (HasLChild(*x)) S.push(x->lChild);
@@ -144,3 +146,6 @@ template <typename T>
 			visit(*this);
 		}
 	}
+
+
+#endif

@@ -1,8 +1,13 @@
+#ifndef __BST__
+#define __BST__
+
 #include "../BinTree/BinTree.h"
 #include <algorithm>
 
 template <typename T> class BST : public BinTree<T> { 
 protected:
+	using BinTree<T>::_root;
+	using BinTree<T>::_size;
 	BinNodePosi(T) _hot;//最后访问的结点
 	BinNodePosi(T) connect34( 
 		BinNodePosi(T), BinNodePosi(T), BinNodePosi(T),
@@ -27,7 +32,7 @@ BinNodePosi(T) & BST<T>::search(const T& e)
 { return searchIn(_root, e, _hot = nullptr); }
 
 template <typename T>
-BinNodePosi(T) & BST<T>::insert(const T& e)
+BinNodePosi(T) BST<T>::insert(const T& e)
 {
 	BinNodePosi(T) & x = search(e);
 	if(x) return x;
@@ -89,6 +94,7 @@ BinNodePosi(T) connect34(
 	return b;
 }
 
+//使用rotateAt的时候，不需要想高度，高度是上一级该考虑的，这一个函数只需考虑位置，即zig，zag等4个情况。
 template <typename T>
 BinNodePosi(T) BST<T>::rotateAt(BinNodePosi(T) v)
 {
@@ -113,3 +119,6 @@ BinNodePosi(T) BST<T>::rotateAt(BinNodePosi(T) v)
 		}
 	}
 }
+
+
+#endif

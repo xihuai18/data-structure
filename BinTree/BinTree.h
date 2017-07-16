@@ -1,3 +1,5 @@
+#ifndef __BINTREE__
+#define __BINTREE__
 #include "BinNode.h"
 #include "../release.h"
 
@@ -18,8 +20,8 @@ public:
 	BinNodePosi(T) insertAsRoot(T const& e);
 	BinNodePosi(T) insertAsLC(BinNodePosi(T) x, T const& e);
 	BinNodePosi(T) insertAsRC(BinNodePosi(T) x, T const& e);
-	BinNodePosi(T) attachAsLC(BinNodePosi(T) x, BinTree<T>* &T);
-	BinNodePosi(T) attachAsRC(BinNodePosi(T) x, BinTree<T>* &T);
+	BinNodePosi(T) attachAsLC(BinNodePosi(T) x, BinTree<T>* &Tr);
+	BinNodePosi(T) attachAsRC(BinNodePosi(T) x, BinTree<T>* &Tr);
 	int remove(BinNodePosi(T) x);
 	BinTree<T>* secede(BinNodePosi(T) x);//摘除子树，并作为独立子树返回
 	template <typename VST> //操作器
@@ -81,30 +83,30 @@ BinNodePosi(T) BinTree<T>::insertAsRC(BinNodePosi(T) x, T const& e)
 }
 
 template <typename T>
-BinNodePosi(T) BinTree<T>::attachAsLC(BinNodePosi(T) x, BinTree<T>* &T)
+BinNodePosi(T) BinTree<T>::attachAsLC(BinNodePosi(T) x, BinTree<T>* &Tr)
 {
-	if(x->lChild = T->_root)
+	if(x->lChild = Tr->_root)
 		x->lChild->parent = x;
-	_size += T->_size;
+	_size += Tr->_size;
 	updateHeightAbove(x);
-	T->_root = nullptr;
-	T->_size = 0;
-	release(T);
-	T = nullptr;
+	Tr->_root = nullptr;
+	Tr->_size = 0;
+	release(Tr);
+	Tr = nullptr;
 	return x;
 }
 
 template <typename T>
-BinNodePosi(T) BinTree<T>::attachAsRC(BinNodePosi(T) x, BinTree<T>* &T)
+BinNodePosi(T) BinTree<T>::attachAsRC(BinNodePosi(T) x, BinTree<T>* &Tr)
 {
-	if(x->rChild = T->_root)
+	if(x->rChild = Tr->_root)
 		x->rChild->parent = x;
-	_size += T->_size;
+	_size += Tr->_size;
 	updateHeightAbove(x);
-	T->_root = nullptr;
-	T->_size = 0;
-	release(T);
-	T = nullptr;
+	Tr->_root = nullptr;
+	Tr->_size = 0;
+	release(Tr);
+	Tr = nullptr;
 	return x;
 }
 
@@ -140,3 +142,5 @@ BinTree<T>* BinTree<T>::secede(BinNodePosi(T) x)
 	_size -= S->_size; 
 	return S; 
 }
+
+#endif
