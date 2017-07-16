@@ -3,6 +3,8 @@
 
 #include "Dictionary.h" //引入词典ADT
 #include "../Bitmap/Bitmap.h" //引入位图
+#include "Entry.h"
+#include <cstring>
 
 template <typename K, typename V> //key、value
 class Hashtable : public Dictionary<K, V> { //符合Dictionary接口的Hashtable模板类
@@ -45,15 +47,45 @@ template<typename K, typename V>
 inline int Hashtable<K, V>::probe4Hit(const K & k)
 {
   int r = hashCode(k) % M;
-  while ((ht[r] && (k != ht[r]->key)) || (!ht[r] && llazilyRemoved(r)))
-	r = (r + 1) % M;
+  int old_r = r;
+  int i = 0;
+  while ((ht[r] && (k != ht[r]->key)) || (!ht[r] && lazilyRemoved(r)))
+  {
+	++i;
+	r = (old_r + i * i) % M;
+  }
   return r;
+}
+
+template<typename K, typename V>
+inline int Hashtable<K, V>::probe4Free(const K & k)
+{
+  int r = hashCode(k) % M;
+  int old_r = r;
+  int i = 0;
+  while (ht[r]) { ++i; r = (old_r + i * i) % M; }
+  return r;
+}
+
+template<typename K, typename V>
+inline void Hashtable<K, V>::rehash()
+{
+  int old_capacity = M;
+  Entry<K, V> ** old_ht = ht;
+  M = primeNLT(2 * M, 1048576, "prime-1048576-bitmap.txt");
+  N = 0; ht = new Entry<K, V>*[M];
+  memset(ht, 0, sizeof(Entry<K, V> *) * M);
+  release(lazyRemoval); lazyRemoval = new Bitmap(M);
+  for (int i = 0; i < old_capacity; ++i)
+	if (ht[i])
+	  put(old_ht[i]->key, old_ht[i]->value);
+  release(old_ht);
 }
 
 template<typename K, typename V>
 inline Hashtable<K, V>::Hashtable(int c)
 {
-  M = primeNLT(c, 10448576, "prime-1048576-bitmap.txt");
+  M = primeNLT(c, 1048576, "prime-1048576-bitmap.txt");
   N = 0;
   ht = new Entry<K, V>*[M];
   memset(ht, 0, sizeof(Entry<K, V>*) * M);
@@ -70,9 +102,14 @@ inline Hashtable<K, V>::~Hashtable()
 }
 
 template<typename K, typename V>
-inline bool Hashtable<K, V>::put(K, V)
+inline bool Hashtable<K, V>::put(K k, V v)
 {
-
+  if (ht[probe4Hit(k)]) return false;
+  int r = probe4Free(k);
+  ht[r] = new Entry<K, V>(k, v);
+  ++N;
+  if (N * 2 > M) rehash();
+  return true;
 }
 
 template<typename K, typename V>
@@ -87,7 +124,7 @@ inline bool Hashtable<K, V>::remove(K k)
 {
   int r = probeHit(k); if (!ht[r]) return false;
   release(ht[r]); ht[r] = nullptr;
-  markAsremoved(r);
+  markAsRemoved(r);
   N--;
   return true;
 }
