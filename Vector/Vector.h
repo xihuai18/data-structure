@@ -1,9 +1,13 @@
 #ifndef __VECTOR__
 #define __VECTOR__
 
-#include <cstdlib>
+
+#include "../util.h"
 typedef int Rank; 
 #define DEFAULT_CAPACITY 30
+
+template <typename T>
+class PQ_ComplHeap;
 
 template <typename T> class Vector { 
 protected:
@@ -17,10 +21,11 @@ protected:
 	void bubbleSort(Rank lo, Rank hi); //ok
 	void merge(Rank lo, Rank mi, Rank hi); //ok
 	void mergeSort(Rank lo, Rank hi); //ok
+	void heapSort(Rank lo, Rank hi);//ok
+
 	/*
 	Rank partition(Rank lo, Rank hi); 
 	void quickSort(Rank lo, Rank hi); 
-	void heapSort(Rank lo, Rank hi); 
 	*/
 
 public:
@@ -236,6 +241,16 @@ void Vector<T>::mergeSort(Rank lo, Rank hi) {
   int mi = (lo + hi) >> 1; 
   mergeSort(lo, mi); mergeSort(mi, hi); merge(lo, mi, hi); 
   }
+
+template<typename T>
+inline void Vector<T>::heapSort(Rank lo, Rank hi)
+{
+  PQ_ComplHeap<T> H(_elem - lo, hi - lo);
+  while (!H.empty())
+  {
+	_elem[--hi] = H.delMax();
+  }
+}
 
 template <typename T> 
 void Vector<T>::merge(Rank lo, Rank mi, Rank hi) { 

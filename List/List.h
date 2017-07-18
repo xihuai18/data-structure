@@ -3,7 +3,7 @@
 
 
 #include "ListNode.h"
-#include <cstdlib>//rand()
+#include "../util.h"
 
 template <typename T> class List {
 private:
