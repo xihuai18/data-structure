@@ -22,11 +22,9 @@ protected:
 	void merge(Rank lo, Rank mi, Rank hi); //ok
 	void mergeSort(Rank lo, Rank hi); //ok
 	void heapSort(Rank lo, Rank hi);//ok
-
-	/*
-	Rank partition(Rank lo, Rank hi); 
-	void quickSort(Rank lo, Rank hi); 
-	*/
+	Rank partition(Rank lo, Rank hi); //ok
+	void quickSort(Rank lo, Rank hi); //ok
+	
 
 public:
 	Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = 0) 
@@ -112,7 +110,7 @@ T& Vector<T>::operator[](Rank r) const
 template <typename T> void Vector<T>::unsort(Rank lo, Rank hi) { 
 	T* V = _elem + lo; 
 	for (Rank i = hi - lo; i > 0; i--) 
-		swap(V[i - 1], V[rand() % i]); 
+		Swap(V[i - 1], V[rand() % i]); 
 }
 
 template <typename T> 
@@ -229,7 +227,7 @@ bool Vector<T>::bubble(Rank lo, Rank hi)
 		if(_elem[lo - 1] > _elem[lo])
 		{
 			sorted = false;
-			swap(_elem[lo - 1], _elem[lo]);
+			Swap(_elem[lo - 1], _elem[lo]);
 		}
 	} 
 	return sorted;
@@ -267,6 +265,33 @@ void Vector<T>::merge(Rank lo, Rank mi, Rank hi) {
 
 template <typename T>
 void Vector<T>::sort(Rank lo, Rank hi)
-{ mergeSort(lo, hi); }
+{ heapSort(lo, hi); }
 
+/*
+unstable 
+4 parts lo (lo, mi] (mi, k) [k, hi)
+*/
+template <typename T>
+Rank Vector<T>::partition(Rank lo, Rank hi)
+{
+	Swap(_elem[lo], _elem[lo + rand() % (hi - lo - 1)]);
+	T p = _elem[lo];
+	Rank mi = lo;
+	for(Rank k = lo + 1; k < hi; ++k)
+	{
+		if(_elem[k] < p)
+			Swap(_elem[++mi], _elem[k]);
+	}
+	Swap(_elem[lo], _elem[mi]);
+	return mi;
+}
+
+template <typename T>
+void Vector<T>::quickSort(Rank lo, Rank hi)
+{
+	if(hi - lo < 2) return ;
+	Rank mi = partition(lo, hi);
+	quickSort(lo, mi + 1);
+	quickSort(mi + 1, hi);
+} 
 #endif

@@ -11,7 +11,7 @@
 #include <cstddef>
 
 template <typename T>
-void swap(T& a, T& b)
+void Swap(T& a, T& b)
 {                                                                       
 	T tmp = a;
 	a = b;
@@ -19,19 +19,19 @@ void swap(T& a, T& b)
 }
 
 template <typename T>
-void swap(T*& a, T*& b)
+void Swap(T*& a, T*& b)
 {
 	swap(*a, *b);
 }
 
 template <typename T>
-T max(T a, T b)
+T Max(T a, T b)
 {
 	return lt(a, b) ? b : a;
 }
 
 template <typename T>
-T min(T a, T b)
+T Min(T a, T b)
 {
 	return lt(a, b) ? a : b;
 }
