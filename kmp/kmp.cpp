@@ -14,7 +14,7 @@ int * buildNext(char * p)
 	while(j < m - 1) {
 		if(0 > i || p[j] == p[i]){
 			++j, ++i;
-			next[j] = next[i] != next[j] ? i : next[i];//改进的kmp，即真前缀和真后缀要在下一位上不同。
+			next[j] = p[i] != p[j] ? i : next[i];//改进的kmp，即真前缀和真后缀要在下一位上不同。
 		}
 		else i = next[i];
 	}

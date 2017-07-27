@@ -92,6 +92,7 @@ inline Rank PQ_ComplHeap<T>::percolateUp(Rank i)//返回上滤最终抵达的位
 	Rank p = Parent(i);
 	if (lt(_elem[i], _elem[p])) break;
 	swap(_elem[i], _elem[p]);
+  i = p;
   }
   return i;
 }
